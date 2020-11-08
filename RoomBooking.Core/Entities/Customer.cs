@@ -9,6 +9,7 @@ namespace RoomBooking.Core.Entities
     {
         private string _firstName;
         private string _lastName;
+        private string _iban;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -32,9 +33,6 @@ namespace RoomBooking.Core.Entities
                 OnPropertyChanged(nameof(LastName));
             }
         }
-
-
-        private string _iban;
 
         public string Iban
         {

@@ -22,8 +22,8 @@ namespace RoomBooking.Wpf.ViewModels
         public Booking CurrentBooking
         {
             get => _currentBooking;
-            set 
-            { 
+            set
+            {
                 _currentBooking = value;
                 OnPropertyChanged(nameof(CurrentBooking));
             }
@@ -32,8 +32,8 @@ namespace RoomBooking.Wpf.ViewModels
         public ObservableCollection<Room> Rooms
         {
             get => _rooms;
-            set 
-            { 
+            set
+            {
                 _rooms = value;
                 OnPropertyChanged(nameof(Rooms));
             }
@@ -53,11 +53,10 @@ namespace RoomBooking.Wpf.ViewModels
         public Room CurrentRoom
         {
             get => _currentRoom;
-            set 
-            { 
+            set
+            {
                 _currentRoom = value;
                 OnPropertyChanged(nameof(CurrentRoom));
-                LoadDataAsync();
             }
         }
 
@@ -77,6 +76,7 @@ namespace RoomBooking.Wpf.ViewModels
                                          .OrderBy(r => r.RoomNumber)
                                          .ToList();
                     CurrentRoom = rooms.First();
+                    Rooms = new ObservableCollection<Room>(rooms);
                 }
                 var bookings = (await uow.Bookings
                                          .GetByRoomWithCustomerAsync(CurrentRoom.Id))

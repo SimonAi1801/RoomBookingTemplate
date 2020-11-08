@@ -23,14 +23,15 @@
         </Grid.RowDefinitions>
 
         <Label Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Center">Rooms:</Label>
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Path=Rooms}" DisplayMemberPath="RoomNumber" SelectedValuePath="RoomNumber" SelectedItem="{Binding CurrentRoom}"/>
-        <DataGrid Grid.Row="2" Grid.Column="1" IsReadOnly="True" ItemsSource="{Binding Path=Bookings}" AutoGenerateColumns="False" SelectedItem="{Binding CurrentBooking}">
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Rooms}" DisplayMemberPath="RoomNumber" SelectedValuePath="RoomNumber" SelectedItem="{Binding CurrentRoom}"/>
+        <DataGrid Grid.Row="2" Grid.Column="1" IsReadOnly="True" ItemsSource="{Binding Bookings}" AutoGenerateColumns="False" SelectedItem="{Binding CurrentBooking}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="FROM" MinWidth="60" Binding="{Binding Path=From, UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn Header="TO" MinWidth="60" Binding="{Binding Path=To, UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn Header="CUSTOMER" Width="*" Binding="{Binding Path=Customer.FullName, UpdateSourceTrigger=PropertyChanged}"/>
             </DataGrid.Columns>
         </DataGrid>
+        <Button Grid.Column="1" Grid.Row="3" Command="{Binding CmdEditCustomerCommand}" Content="{Binding Path=CurrentBooking.Customer.FullName}" ContentStringFormat="{}{0} BEARBEITEN"/>
     </Grid>
 
 </controls:MetroWindow>
