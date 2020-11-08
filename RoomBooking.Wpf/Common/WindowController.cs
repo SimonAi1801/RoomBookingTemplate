@@ -7,45 +7,45 @@ using System.Windows;
 
 namespace RoomBooking.Wpf.Common
 {
-  public class WindowController : IWindowController
-  {
-    private readonly Dictionary<BaseViewModel, Window> _windows
-      = new Dictionary<BaseViewModel, Window>();
-
-    public void ShowWindow(BaseViewModel viewModel, bool showAsDialog)
+    public class WindowController : IWindowController
     {
-      Window window = viewModel switch
-      {
-        // Wenn viewModel null ist -> ArgumentNullException
-        null => throw new ArgumentNullException(nameof(viewModel)),
+        private readonly Dictionary<BaseViewModel, Window> _windows
+          = new Dictionary<BaseViewModel, Window>();
 
-        MainViewModel _ => new MainWindow(),
+        public void ShowWindow(BaseViewModel viewModel, bool showAsDialog)
+        {
+            Window window = viewModel switch
+            {
+                // Wenn viewModel null ist -> ArgumentNullException
+                null => throw new ArgumentNullException(nameof(viewModel)),
 
-        // default -> InvalidOperationException
-        _ => throw new InvalidOperationException($"Unbekanntes ViewModel '{viewModel}'"),
-      };
+                MainViewModel _ => new MainWindow(),
 
-      _windows[viewModel] = window;
+                // default -> InvalidOperationException
+                _ => throw new InvalidOperationException($"Unbekanntes ViewModel '{viewModel}'"),
+            };
 
-      window.DataContext = viewModel;
-      if (showAsDialog)
-      {
-        window.ShowDialog();
-      }
-      else
-      {
-        window.Show();
-      }
+            _windows[viewModel] = window;
+
+            window.DataContext = viewModel;
+            if (showAsDialog)
+            {
+                window.ShowDialog();
+            }
+            else
+            {
+                window.Show();
+            }
+        }
+
+        public void CloseWindow(BaseViewModel viewModel)
+        {
+            if (_windows.ContainsKey(viewModel))
+            {
+                Window window = _windows[viewModel];
+                _windows.Remove(viewModel);
+                window.Close();
+            }
+        }
     }
-
-    public void CloseWindow(BaseViewModel viewModel)
-    {
-      if (_windows.ContainsKey(viewModel))
-      {
-        Window window = _windows[viewModel];
-        _windows.Remove(viewModel);
-        window.Close();
-      }
-    }
-  }
 }

@@ -4,20 +4,20 @@ using System.Windows;
 
 namespace RoomBooking.Wpf
 {
-  /// <summary>
-  /// Interaction logic for App.xaml
-  /// </summary>
-  public partial class App : Application
-  {
-    public App()
+    /// <summary>
+    /// Interaction logic for App.xaml
+    /// </summary>
+    public partial class App : Application
     {
-    }
+        public App()
+        {
+        }
 
-    private async void Application_Startup(object sender, StartupEventArgs e)
-    {
-      WindowController controller = new WindowController();
-      var mainViewModel = await MainViewModel.CreateAsync(controller);
-      controller.ShowWindow(mainViewModel, false);
+        private async void Application_Startup(object sender, StartupEventArgs e)
+        {
+            WindowController controller = new WindowController();
+            var mainViewModel = await MainViewModel.CreateAsync(controller);
+            controller.ShowWindow(mainViewModel, false);
+        }
     }
-  }
 }
