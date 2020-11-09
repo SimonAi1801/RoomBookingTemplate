@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace RoomBooking.Wpf.ViewModels
 {
@@ -18,6 +19,7 @@ namespace RoomBooking.Wpf.ViewModels
         private Room _currentRoom;
         private ObservableCollection<Room> _rooms;
         private ObservableCollection<Booking> _bookings;
+        private ICommand _cmdEditCustomerCommand;
 
         public Booking CurrentBooking
         {
@@ -95,9 +97,27 @@ namespace RoomBooking.Wpf.ViewModels
             return viewModel;
         }
 
+        public ICommand CmdEditCustomerCommand
+        {
+            get
+            {
+                if (_cmdEditCustomerCommand == null)
+                {
+                    _cmdEditCustomerCommand = new RelayCommand(
+                        execute: _ =>
+                        {
+                            Controller.ShowWindow(new EditCustomerModel(Controller, CurrentBooking.Customer),true);
+                        },
+                        canExecute: _ => CurrentBooking != null
+                    );
+                }
+                return _cmdEditCustomerCommand;
+            }
+        }
+
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            throw new NotImplementedException();
+            return Enumerable.Empty<ValidationResult>();
         }
     }
 }
