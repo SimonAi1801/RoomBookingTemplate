@@ -57,6 +57,7 @@ namespace RoomBooking.Wpf.ViewModels
             {
                 _currentRoom = value;
                 OnPropertyChanged(nameof(CurrentRoom));
+                LoadDataAsync();
             }
         }
 
