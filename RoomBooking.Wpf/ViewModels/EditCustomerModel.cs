@@ -1,5 +1,6 @@
 ﻿using RoomBooking.Core.Contracts;
 using RoomBooking.Core.Entities;
+using RoomBooking.Core.Validations;
 using RoomBooking.Persistence;
 using RoomBooking.Wpf.Common;
 using RoomBooking.Wpf.Common.Contracts;
@@ -116,15 +117,31 @@ namespace RoomBooking.Wpf.ViewModels
                     _cmdSaveCommand = new RelayCommand(
                         execute: async _ =>
                         {
-                            using (IUnitOfWork uow = new UnitOfWork())
-                            {
-                                _customer.FirstName = _firstName;
-                                _customer.LastName = _lastName;
-                                _customer.Iban = _iban;
+                            Validate();
 
-                                uow.Customers.Update(_customer);
+                            try
+                            {
+                                using IUnitOfWork uow = new UnitOfWork();
+                                _customer.FirstName = FirstName;
+                                _customer.LastName = LastName;
+                                _customer.Iban = Iban;
+                                uow.Customers.Update(Customer);
                                 await uow.SaveAsync();
                                 Controller.CloseWindow(this);
+                            }
+                            catch (ValidationException ex)
+                            {
+                                if (ex.Value is IEnumerable<string> properties)
+                                {
+                                    foreach (var property in properties)
+                                    {
+                                        Errors.Add(property, new List<string> { ex.ValidationResult.ErrorMessage });
+                                    }
+                                }
+                                else
+                                {
+                                    DbError = ex.ValidationResult.ToString();
+                                }
                             }
                         },
                         canExecute: _ => Customer != null);
@@ -137,7 +154,10 @@ namespace RoomBooking.Wpf.ViewModels
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            return Enumerable.Empty<ValidationResult>();
+            if (!IbanChecker.CheckIban(Iban))
+            {
+                yield return new ValidationResult($"Iban nicht gültig!", new string[] { nameof(Iban) });
+            }
         }
     }
 }
