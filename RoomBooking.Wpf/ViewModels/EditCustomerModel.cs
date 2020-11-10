@@ -122,10 +122,11 @@ namespace RoomBooking.Wpf.ViewModels
                             try
                             {
                                 using IUnitOfWork uow = new UnitOfWork();
-                                _customer.FirstName = FirstName;
-                                _customer.LastName = LastName;
-                                _customer.Iban = Iban;
-                                uow.Customers.Update(Customer);
+                                var customerInDb = await uow.Customers.GetByIdAsync(_customer.Id);
+                                customerInDb.FirstName = _firstName;
+                                customerInDb.LastName = _lastName;
+                                customerInDb.Iban = _iban;
+                                uow.Customers.Update(customerInDb);
                                 await uow.SaveAsync();
                                 Controller.CloseWindow(this);
                             }
